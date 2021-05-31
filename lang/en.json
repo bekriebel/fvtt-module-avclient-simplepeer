@@ -1,0 +1,4 @@
+{
+    "SIMPLEPEER.debug": "Enable debug logging",
+    "SIMPLEPEER.debugHint": "Enables CONFIG.debug.av and CONFIG.debug.avclient for extra logging"
+}
