@@ -35,6 +35,13 @@ export default class SimplePeerClient {
       await peer.addStream(this.localStream);
     }
 
+    // Make sure broadcasting is set properly
+    const voiceModeAlways = this.settings.get("client", "voice.mode") === "always";
+    this.simplePeerAvClient.toggleAudio(
+      voiceModeAlways && this.avMaster.canUserShareAudio(game.user.id),
+    );
+    this.avMaster.broadcast(voiceModeAlways);
+
     this.render();
   }
 
@@ -71,6 +78,13 @@ export default class SimplePeerClient {
 
   async initLocalStream() {
     log.debug("Initializing local stream");
+
+    // Stop any existing media stream
+    if (this.localStream) {
+      for (const track of this.localStream.getTracks()) {
+        track.stop();
+      }
+    }
 
     // Determine if the user can send audio & video
     const audioRequested = this.settings.get("client", "audioSrc")
